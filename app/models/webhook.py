@@ -46,7 +46,7 @@ class Webhook(Base):
     last_error = Column(String(500), nullable=True)
     
     # Metadata
-    metadata = Column(JSON, nullable=True)
+    extra_metadata = Column(JSON, nullable=True)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)

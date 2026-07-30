@@ -47,7 +47,7 @@ async def configure_sync(
         
     except Exception as e:
         logger.error(f"Failed to configure sync: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/{sync_id}/status")
@@ -75,7 +75,7 @@ async def get_sync_status(
         
     except Exception as e:
         logger.error(f"Failed to get sync status: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/{sync_id}/trigger")
@@ -100,4 +100,4 @@ async def trigger_sync(
         
     except Exception as e:
         logger.error(f"Failed to trigger sync: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))

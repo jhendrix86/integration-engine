@@ -63,7 +63,7 @@ async def list_templates(
         
     except Exception as e:
         logger.error(f"Failed to list templates: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/{template_id}/install")
@@ -90,4 +90,4 @@ async def install_template(
         
     except Exception as e:
         logger.error(f"Failed to install template: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))

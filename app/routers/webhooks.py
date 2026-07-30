@@ -43,7 +43,7 @@ async def receive_webhook(
         
     except Exception as e:
         logger.error(f"Failed to process webhook: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/{webhook_id}")
@@ -69,7 +69,7 @@ async def get_webhook(
         
     except Exception as e:
         logger.error(f"Failed to get webhook: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/")
@@ -111,4 +111,4 @@ async def list_webhooks(
         
     except Exception as e:
         logger.error(f"Failed to list webhooks: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))

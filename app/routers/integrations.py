@@ -84,7 +84,7 @@ async def trigger_sync(
         
     except Exception as e:
         logger.error(f"Failed to trigger sync: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/{integration_id}")
@@ -116,7 +116,7 @@ async def get_integration(
         
     except Exception as e:
         logger.error(f"Failed to get integration: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/")
@@ -167,4 +167,4 @@ async def list_integrations(
         
     except Exception as e:
         logger.error(f"Failed to list integrations: {e}")
-        raise HTTPException(status_code=500, detail(str(e))
+        raise HTTPException(status_code=500, detail=str(e))
