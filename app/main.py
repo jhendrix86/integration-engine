@@ -6,6 +6,7 @@ Third-party integration system for the Autonomous Company OS
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from datetime import datetime
 from loguru import logger
 import os
 
@@ -85,7 +86,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "integration-engine",
-        "timestamp": logger.info("Health check performed")
+        "timestamp": datetime.utcnow().isoformat()
     }
 
 

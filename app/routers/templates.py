@@ -5,6 +5,7 @@ Templates router
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
+from datetime import datetime
 from loguru import logger
 
 from app.database import get_db
@@ -82,7 +83,7 @@ async def install_template(
             "template_id": template_id,
             "name": "HubSpot CRM",
             "status": "active",
-            "installed_at": logger.info("Template installed")
+            "installed_at": datetime.utcnow().isoformat()
         }
         
         logger.info(f"Template installed: {template_id}")
