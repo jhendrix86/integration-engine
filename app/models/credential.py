@@ -10,6 +10,7 @@ import uuid
 import enum
 
 from app.database import Base
+from app.models.tenant_base import TenantBase
 
 
 class CredentialType(str, enum.Enum):
@@ -20,7 +21,7 @@ class CredentialType(str, enum.Enum):
     TOKEN = "token"
 
 
-class Credential(Base):
+class Credential(TenantBase, Base):
     """Credential model"""
     __tablename__ = "credentials"
     

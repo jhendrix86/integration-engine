@@ -10,6 +10,7 @@ import uuid
 import enum
 
 from app.database import Base
+from app.models.tenant_base import TenantBase
 
 
 class SyncStatus(str, enum.Enum):
@@ -21,7 +22,7 @@ class SyncStatus(str, enum.Enum):
     CANCELLED = "cancelled"
 
 
-class SyncJob(Base):
+class SyncJob(TenantBase, Base):
     """Sync job model"""
     __tablename__ = "sync_jobs"
     

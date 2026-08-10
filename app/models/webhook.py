@@ -10,6 +10,7 @@ import uuid
 import enum
 
 from app.database import Base
+from app.models.tenant_base import TenantBase
 
 
 class WebhookStatus(str, enum.Enum):
@@ -19,7 +20,7 @@ class WebhookStatus(str, enum.Enum):
     ERROR = "error"
 
 
-class Webhook(Base):
+class Webhook(TenantBase, Base):
     """Webhook model"""
     __tablename__ = "webhooks"
     

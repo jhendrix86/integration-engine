@@ -10,6 +10,7 @@ import uuid
 import enum
 
 from app.database import Base
+from app.models.tenant_base import TenantBase
 
 
 class IntegrationStatus(str, enum.Enum):
@@ -29,7 +30,7 @@ class IntegrationType(str, enum.Enum):
     CUSTOM = "custom"
 
 
-class Integration(Base):
+class Integration(TenantBase, Base):
     """Integration model"""
     __tablename__ = "integrations"
     
