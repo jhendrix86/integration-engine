@@ -7,7 +7,7 @@ from .webhook import Webhook, WebhookStatus
 from .sync import SyncJob, SyncStatus
 from .credential import Credential, CredentialType
 from .tenant import Tenant
-from .tenant_base import TenantBase
+from .tenant_base import TenantBase, apply_tenant_context
 
 __all__ = [
     'Integration',
@@ -20,5 +20,6 @@ __all__ = [
     'Credential',
     'CredentialType',
     'Tenant',
-    'TenantBase'
+    'TenantBase',
+    'apply_tenant_context'
 ]
