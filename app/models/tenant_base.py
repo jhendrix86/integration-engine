@@ -13,7 +13,7 @@ class TenantBase:
     tenant_id = Column(
         UUID(as_uuid=True),
         ForeignKey("tenants.id", ondelete="CASCADE"),
-        nullable=False,
+        nullable=True,  # Initially nullable for migration
         index=True,
         comment="Tenant identifier for data isolation"
     )
