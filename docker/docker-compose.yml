@@ -10,7 +10,7 @@ services:
       - "8044:8044"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/integrations
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=redis://redis:6379/3
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-100}
       - RATE_LIMIT_PER_HOUR=${RATE_LIMIT_PER_HOUR:-1000}
@@ -19,36 +19,13 @@ services:
       - SYNC_RETRY_ATTEMPTS=${SYNC_RETRY_ATTEMPTS:-3}
       - DEBUG=${DEBUG:-false}
       - GLOBAL_STATE_MANAGER_URL=http://global-state-manager:8035
-    depends_on:
-      - postgres
-      - redis
+    # No depends_on here - postgres/redis moved to shared infra
+    # (deploy/docker-compose.infra.yml), a different compose project.
+    # Bring that up first: deploy/03-build-and-up.sh infra-up
     networks:
-      - integration-network
-    restart: unless-stopped
-
-  postgres:
-    image: postgres:15-alpine
-    container_name: integration-postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=integrations
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    networks:
-      - integration-network
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    container_name: integration-redis
-    networks:
-      - integration-network
+      - os42-shared
     restart: unless-stopped
 
 networks:
-  integration-network:
-    driver: bridge
-
-volumes:
-  postgres-data:
+  os42-shared:
+    external: true
