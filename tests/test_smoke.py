@@ -15,7 +15,9 @@ async def test_app_instantiation():
 @pytest.mark.asyncio
 async def test_models_import():
     """Verify core models import without error"""
-    from app.models import Webhook, Integration, Event
+    from app.models import Webhook, Integration, SyncJob, Credential, IntegrationTemplate
     assert Webhook is not None
     assert Integration is not None
-    assert Event is not None
+    assert SyncJob is not None
+    assert Credential is not None
+    assert IntegrationTemplate is not None

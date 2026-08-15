@@ -41,7 +41,7 @@ from app.main import app  # noqa: E402
 @pytest_asyncio.fixture
 async def db_engine():
     """A fresh database schema for each test - imports every model so all tables register."""
-    from app.models import integration, webhook, sync, credential  # noqa: F401
+    from app.models import integration, webhook, sync, credential, integration_template  # noqa: F401
 
     async with database_module.engine.begin() as conn:
         await conn.run_sync(database_module.Base.metadata.drop_all)

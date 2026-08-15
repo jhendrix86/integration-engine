@@ -17,7 +17,7 @@ from app.database import AsyncSessionLocal
 from app.models.tenant import Tenant
 from app.models.credential import Credential
 from app.models.integration import Integration
-from app.models.sync import Sync
+from app.models.sync import SyncJob
 from app.models.webhook import Webhook
 from loguru import logger
 
@@ -43,7 +43,7 @@ async def migrate_to_default_tenant():
             models_to_migrate = [
                 (Credential, "credentials"),
                 (Integration, "integrations"),
-                (Sync, "syncs"),
+                (SyncJob, "sync_jobs"),
                 (Webhook, "webhooks")
             ]
             
