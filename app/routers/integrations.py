@@ -28,7 +28,7 @@ class CreateIntegrationRequest(BaseModel):
     name: str
     integration_type: IntegrationType
     provider: str
-    credentials: dict
+    credentials: Optional[dict] = None
     config: dict
     auto_sync_enabled: bool = False
     sync_interval_hours: int = 24
