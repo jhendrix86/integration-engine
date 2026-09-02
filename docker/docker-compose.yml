@@ -3,8 +3,14 @@ version: '3.8'
 services:
   integration-engine:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      # Workspace root, not just this repo - needed to reach the
+      # empire-operators sibling package the Dockerfile copies in (see its
+      # own comment for why; content-engine is the reference impl). This
+      # context path is relative to this compose file's own location, so
+      # `docker compose -f docker/docker-compose.yml build` from
+      # integration-engine/ still works unchanged.
+      context: ../..
+      dockerfile: integration-engine/docker/Dockerfile
     container_name: integration-engine
     ports:
       - "8044:8044"
