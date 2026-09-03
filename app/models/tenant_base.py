@@ -3,7 +3,7 @@ Tenant base mixin for multi-tenancy support
 """
 
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Uuid
 from app.tenant_context import get_tenant_context
 from loguru import logger
 
@@ -11,7 +11,7 @@ from loguru import logger
 class TenantBase:
     """Mixin class that adds tenant_id to models for multi-tenancy."""
     tenant_id = Column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("tenants.id", ondelete="CASCADE"),
         nullable=True,  # Initially nullable for migration
         index=True,

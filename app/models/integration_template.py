@@ -10,7 +10,7 @@ per-tenant recipient data) - the two aren't the same shape of problem.
 """
 
 from sqlalchemy import Column, String, DateTime, Boolean, Enum, JSON
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Uuid
 from datetime import datetime
 import uuid
 
@@ -22,7 +22,7 @@ class IntegrationTemplate(Base):
     """A reusable starting-point config for a known provider"""
     __tablename__ = "integration_templates"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
     name = Column(String(255), unique=True, nullable=False)
     integration_type = Column(Enum(IntegrationType), nullable=False)

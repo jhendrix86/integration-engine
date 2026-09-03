@@ -3,7 +3,7 @@ Credential models
 """
 
 from sqlalchemy import Column, String, DateTime, Enum, ForeignKey, JSON
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Uuid
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
@@ -25,8 +25,8 @@ class Credential(TenantBase, Base):
     """Credential model"""
     __tablename__ = "credentials"
     
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    integration_id = Column(UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False)
+    id = Column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    integration_id = Column(Uuid(as_uuid=True), ForeignKey("integrations.id"), nullable=False)
     
     # Credential details
     credential_type = Column(Enum(CredentialType), nullable=False)

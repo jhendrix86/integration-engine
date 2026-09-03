@@ -3,7 +3,7 @@ Webhook models
 """
 
 from sqlalchemy import Column, String, Integer, DateTime, Boolean, Enum, ForeignKey, Text, JSON
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Uuid
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
@@ -24,8 +24,8 @@ class Webhook(TenantBase, Base):
     """Webhook model"""
     __tablename__ = "webhooks"
     
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    integration_id = Column(UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False)
+    id = Column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    integration_id = Column(Uuid(as_uuid=True), ForeignKey("integrations.id"), nullable=False)
     
     # Webhook details
     webhook_url = Column(String(500), nullable=False)
