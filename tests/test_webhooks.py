@@ -18,7 +18,10 @@ async def _create_integration(client, **overrides):
 
 
 async def _register_webhook(client, integration_id, **overrides):
-    payload = {"integration_id": integration_id, "webhook_url": "https://us.example.com/hooks/x", "event_type": "contact.created"}
+    payload = {
+        "integration_id": integration_id, "webhook_url": "https://us.example.com/hooks/x",
+        "event_type": "contact.created", "secret": "a-real-secret",
+    }
     payload.update(overrides)
     r = await client.post("/webhooks/", json=payload)
     assert r.status_code == 200
@@ -39,19 +42,50 @@ async def test_register_webhook_persists_a_real_row(client):
 async def test_register_webhook_for_unknown_integration_is_a_real_404(client):
     r = await client.post("/webhooks/", json={
         "integration_id": "00000000-0000-0000-0000-000000000000",
-        "webhook_url": "https://x.example.com", "event_type": "contact.created",
+        "webhook_url": "https://x.example.com", "event_type": "contact.created", "secret": "shh",
     })
     assert r.status_code == 404
 
 
-async def test_receive_webhook_without_a_secret_accepts_any_payload(client):
+async def test_register_webhook_rejects_empty_secret(client):
+    # SECURITY_REVIEW.md finding #6: verify_signature() honestly skips
+    # verification when a webhook has no secret, so nothing should be able
+    # to create one that way - a webhook without a secret accepts any
+    # unsigned payload from anyone, forever.
     integration = await _create_integration(client)
-    await _register_webhook(client, integration["id"])
+
+    r = await client.post("/webhooks/", json={
+        "integration_id": integration["id"], "webhook_url": "https://x.example.com",
+        "event_type": "contact.created", "secret": "",
+    })
+    assert r.status_code == 422
+
+
+async def test_register_webhook_requires_a_secret_field_at_all(client):
+    integration = await _create_integration(client)
+
+    r = await client.post("/webhooks/", json={
+        "integration_id": integration["id"], "webhook_url": "https://x.example.com",
+        "event_type": "contact.created",
+    })
+    assert r.status_code == 422
+
+
+async def test_receive_webhook_with_a_real_secret_accepts_a_correctly_signed_payload(client):
+    integration = await _create_integration(client)
+    await _register_webhook(client, integration["id"], secret="shh")
+
+    body = json.dumps({"contact_id": "c1", "email": "a@example.com"}).encode()
+    signature = hmac.new(b"shh", body, hashlib.sha256).hexdigest()
 
     r = await client.post(
         f"/webhooks/{integration['id']}",
-        json={"contact_id": "c1", "email": "a@example.com"},
-        headers={"X-Event-Type": "contact.created"},
+        content=body,
+        headers={
+            "X-Event-Type": "contact.created",
+            "X-Webhook-Signature": f"sha256={signature}",
+            "Content-Type": "application/json",
+        },
     )
 
     assert r.status_code == 200
@@ -68,10 +102,13 @@ async def test_receive_webhook_increments_real_counters(client, db_session):
     from app.models.webhook import Webhook
 
     integration = await _create_integration(client)
-    registered = await _register_webhook(client, integration["id"])
+    registered = await _register_webhook(client, integration["id"])  # default secret: "a-real-secret"
 
+    body = b"{}"
+    signature = hmac.new(b"a-real-secret", body, hashlib.sha256).hexdigest()
     await client.post(
-        f"/webhooks/{integration['id']}", json={}, headers={"X-Event-Type": "contact.created"},
+        f"/webhooks/{integration['id']}", content=body,
+        headers={"X-Event-Type": "contact.created", "X-Webhook-Signature": f"sha256={signature}", "Content-Type": "application/json"},
     )
 
     result = await db_session.execute(select(Webhook).where(Webhook.id == uuid.UUID(registered["id"])))

@@ -13,7 +13,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from loguru import logger
 
 from app.database import get_db
@@ -30,7 +30,19 @@ class RegisterWebhookRequest(BaseModel):
     integration_id: str
     webhook_url: str
     event_type: str
-    secret: Optional[str] = None
+    secret: str
+
+    @field_validator("secret")
+    @classmethod
+    def _secret_must_be_real(cls, v: str) -> str:
+        # SECURITY_REVIEW.md finding #6: verify_signature() honestly skips
+        # verification when a webhook has no secret - that's the right
+        # behavior for an existing no-secret registration, but nothing
+        # should be able to create a NEW one that way, since it means any
+        # unsigned payload from anyone is accepted forever.
+        if not v or not v.strip():
+            raise ValueError("secret must be a non-empty string - unsigned webhooks accept any payload from anyone")
+        return v
 
 
 def _serialize(webhook: Webhook) -> dict:
